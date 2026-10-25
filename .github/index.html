@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shadow Windows</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:white;overflow:hidden}
+.desktop{height:100dvh;background:radial-gradient(ellipse at 70% 35%,#138be5,#0752a5 45%,#061b48);position:relative;padding:22px}
+.icon{width:76px;text-align:center;padding:12px 4px;cursor:pointer;border:1px solid transparent;border-radius:7px}
+.icon:active,.icon:hover{background:#ffffff30;border-color:#ffffff40}
+.icon span{font-size:30px;display:block;margin-bottom:8px}
+.window{display:none;position:absolute;top:12%;left:5%;width:90%;max-width:520px;min-height:220px;background:#f5f7fc;color:#17243a;border-radius:12px;overflow:hidden;box-shadow:0 15px 55px #00152c80}
+.bar{background:#e5ebf5;padding:14px;display:flex;justify-content:space-between;font-weight:bold}
+.content{padding:20px}
+.close{border:0;background:#dce5f3;border-radius:5px;padding:5px 12px}
+.taskbar{position:absolute;bottom:0;left:0;right:0;height:58px;background:#dbe8f4e8;display:flex;align-items:center;justify-content:center;gap:15px;color:#152c48}
+.taskbar button{border:0;border-radius:9px;padding:9px 13px;background:#ffffffb8;font-size:18px}
+#clock{position:absolute;right:10px;color:#182a42;font-size:12px;text-align:right}
+#start{display:none;position:absolute;bottom:66px;left:50%;transform:translateX(-50%);width:min(340px,92vw);padding:20px;border-radius:15px;background:#e7edf6f5;color:#182a42;box-shadow:0 8px 35px #00152c70}
+#start input{width:100%;padding:12px;border:0;border-radius:8px;margin-bottom:14px}
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.apps button{padding:14px 4px;border:0;border-radius:8px;background:#ffffffb8;color:#182a42}
+</style>
+</head>
+<body>
+<div class="desktop">
+  <div class="icon" onclick="openApp('PC','🖥️ This PC — Simulator')"><span>🖥️</span>This PC</div>
+  <div class="icon" onclick="openApp('Files','📁 File Explorer — Demo')"><span>📁</span>Explorer</div>
+  <div class="icon" onclick="openApp('Calculator','<input id=&quot;calc&quot; placeholder=&quot;Example: 12*5+2&quot; style=&quot;padding:10px;width:100%&quot;><button onclick=&quot;document.getElementById(\'result\').textContent= /^[0-9+*/().% -]+$/.test(document.getElementById(\'calc\').value)?calculate(document.getElementById(\'calc\').value):\'Invalid expression\'&quot;>Calculate</button><p id=&quot;result&quot;></p>')"><span>🧮</span>Calculator</div>
+  <div class="window" id="win">
+    <div class="bar"><span id="title">Window</span><button class="close" onclick="document.getElementById('win').style.display='none'">✕</button></div>
+    <div class="content" id="content"></div>
+  </div>
+  <div id="start">
+    <input placeholder="🔎 Search apps">
+    <div class="apps">
+      <button onclick="openApp('Explorer','📁 File Explorer — Demo')">📁 Explorer</button>
+      <button onclick="openApp('Calculator','🧮 Calculator')">🧮 Calculator</button>
+      <button onclick="openApp('About','About this simulator')">⚙️ Settings</button>
+    </div>
+    <p>Shadow Windows · Demo</p>
+  </div>
+  <div class="taskbar">
+    <button onclick="toggleStart()">⊞</button>
+    <button onclick="openApp('Browser','🌐 Welcome to Shadow Browser')">🌐</button>
+    <button onclick="openApp('Files','📁 File Explorer — Demo')">📁</button>
+    <div id="clock"></div>
+  </div>
+</div>
+<script>
+function toggleStart(){
+ const s=document.getElementById('start');
+ s.style.display=s.style.display==='block'?'none':'block';
+}
+function openApp(name,html){
+ document.getElementById('title').textContent=name;
+ document.getElementById('content').innerHTML=html;
+ document.getElementById('win').style.display='block';
+ document.getElementById('start').style.display='none';
+}
+function calculate(s){
+ try{
+  if(!/^[0-9+*/().% -]+$/.test(s))return 'Invalid expression';
+  return Function('"use strict";return ('+s+')')();
+ }catch(e){return 'Invalid expression'}
+}
+function tick(){
+ document.getElementById('clock').innerHTML=
+ new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+
+ '<br>'+new Date().toLocaleDateString();
+}
+tick();setInterval(tick,1000);
+</script>
+</body>
+  </html>
+  
